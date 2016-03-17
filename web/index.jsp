@@ -13,6 +13,7 @@
         <title>Alien Invasion - Login</title>
     </head>
     <%
+        
     %>
     <body>
         <form id="frmLogin" action="LoginValidator" method="post">

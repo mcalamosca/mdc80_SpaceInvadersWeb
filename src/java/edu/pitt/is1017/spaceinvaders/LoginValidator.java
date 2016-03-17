@@ -15,14 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author mcala_000
+ * @author Master Chief
  */
 @WebServlet(name = "LoginValidator", urlPatterns = {"/LoginValidator"})
 public class LoginValidator extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -33,26 +32,31 @@ public class LoginValidator extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
             String userName = "";
             String password = "";
             User user;
+            if (request.getParameter("btnSubmit") != null) {
+                if (request.getParameter("txtUserName") != null) {
+                    if (request.getParameter("txtUserName") != "") {
+                        userName = request.getParameter("txtUserName");
+                    }
+                }
 
-            if (request.getParameter("txtUserName") != null) {
-                if (request.getParameter("txtUserName") != "") {
-                    userName = request.getParameter("txtUserName");
-                    password = request.getParameter("txtPassword");
+                if (request.getParameter("txtPassword") != null) {
+                    if (request.getParameter("txtPassword") != "") {
+                        password = request.getParameter("txtPassword");
+                    }
+                }
+
+                if (!userName.equals("") && !password.equals("")) {
+                    out.println("<script>alert('Successful Login')</script>");
+                    user = new User(userName, password);
+                    response.sendRedirect("game.jsp");
+                    
+                } else {
+                    out.println("<script>alert('You must enter both User Name and Password')</script>");
                 }
             }
-            if (!userName.equals("") && !password.equals("")) {
-                user = new User(userName, password);
-                out.println("<script>alert('Successful Login');</script>");
-
-            } else {
-                out.println("<script>alert('You must enter bother user name and password');</script>");
-            }
-            
-
         }
     }
 

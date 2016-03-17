@@ -9,9 +9,22 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Alien Invasion - Registration</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <form id="frmRegistration" action="registration.jsp" method="post">
+            <label for="txtFirstName">First Name: </label>&nbsp;<input type="text" id="txtFirstName" name="txtFirstName" value="">
+            <br />            
+            <label for="txtLastName">Last Name: </label>&nbsp;<input type="text" id="txtLastName" name="txtLastName" value="">
+            <br />
+            <label for="txtEmail">Email: </label>&nbsp;<input type="text" id="txtEmail" name="txtEmail" value="">
+            <br />
+            <label for="txtPassword">Password: </label>&nbsp;<input type="password" id="txtPassword" name="txtPassword" value="">
+            <br />
+            <label for="txtPasswordConfirm">Confirm Password: </label>&nbsp;<input type="password" id="txtPasswordConfirm" name="txtPasswordConfirm" value="">
+            <br />
+            <input type="submit" id="btnSubmit" name="btnSubmit" value="Register">
+
+        </form>
     </body>
 </html>

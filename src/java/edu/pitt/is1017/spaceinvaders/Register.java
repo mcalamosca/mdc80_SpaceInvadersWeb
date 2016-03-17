@@ -15,14 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author mcala_000
+ * @author Master Chief
  */
-@WebServlet(name = "Registration", urlPatterns = {"/Registration"})
-public class Registration extends HttpServlet {
+@WebServlet(name = "Register", urlPatterns = {"/Register"})
+public class Register extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -37,10 +36,10 @@ public class Registration extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Registration</title>");            
+            out.println("<title>Servlet Register</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Registration at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Register at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
