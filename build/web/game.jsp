@@ -1,17 +1,26 @@
-<%-- 
-    Document   : game
-    Created on : Mar 3, 2016, 6:45:39 PM
-    Author     : mcala_000
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Alien Invasion</title>
+        <style>
+            #alienImage{
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            }
+        </style>
+        <script src="assets/js/jquery-2.2.2.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $alien = $('#alienImage');
+                //console.log(#alienImage);
+            });
+            
+        </script>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <img src='assets/images/space.png' id="alienImage"/>
     </body>
 </html>
