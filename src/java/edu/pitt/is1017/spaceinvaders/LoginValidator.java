@@ -21,8 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginValidator extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -50,10 +49,12 @@ public class LoginValidator extends HttpServlet {
                 }
 
                 if (!userName.equals("") && !password.equals("")) {
-                    out.println("<script>alert('Successful Login')</script>");
                     user = new User(userName, password);
-                    if (user.getFirstName() != "") {
+                    if(user.isLoggedIn()) {
                         response.sendRedirect("game.jsp");
+                        out.println("<script>alert('Successful Login')</script>");
+                    } else {
+                        out.println("<script>alert('Username and/or password is incorrect')</script>");
                     }
 
                 } else {

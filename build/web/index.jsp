@@ -17,7 +17,7 @@
     %>
     <body>
         <form id="frmLogin" action="LoginValidator" method="post">
-            <label for="txtUserName">User Name: </label>&nbsp;<input type="text" id="txtUserName" name="txtUserName" value="">
+            <label for="txtUserName">Email: </label>&nbsp;<input type="text" id="txtUserName" name="txtUserName" value="">
             <br />
             <label for="txtPassword">Password: </label>&nbsp;<input type="password" id="txtPassword" name="txtPassword" value="">
             <br />

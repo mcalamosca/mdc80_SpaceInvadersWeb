@@ -3,7 +3,6 @@ package edu.pitt.is1017.spaceinvaders;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
 /**
  * 
  * @author Micah Calamosca
@@ -70,19 +69,7 @@ public class User {
 				this.email = rs.getString("email");
 				this.password = rs.getString("password");
 				this.loggedIn = true;
-				
-				JOptionPane.showMessageDialog(null, "Login successful!");
-				/*
-				System.out.println(this.userID);
-				System.out.println(this.lastName);
-				System.out.println(this.firstName);
-				System.out.println(this.email);
-				System.out.println(this.password);
-				*/				
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Username or Password incorrect!");
+								
 			}
 		}
 		catch (SQLException e) {
@@ -105,8 +92,7 @@ public class User {
 		sql += "(`lastName`,`firstName`,`email`,`password`) ";
 		sql += "VALUES (\""+lastName+"\",\"" + firstName + "\",\"" + email + "\",md5(\"" + password + "\"));";
 
-		if(db.executeQuery(sql))
-			JOptionPane.showMessageDialog(null, "Registration Successful!");
+		
 		db.closeConnection();
 	}
 
@@ -121,8 +107,7 @@ public class User {
 		sql += "SET `password` = \"" + getPassword() + "\", ";
 		sql += "WHERE `userID` = \"" + getUserID() + "\";";
 
-		if(db.executeQuery(sql))
-			JOptionPane.showMessageDialog(null, "User info updated.");
+		
 		db.closeConnection();
 	}
 

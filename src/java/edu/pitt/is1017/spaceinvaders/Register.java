@@ -32,16 +32,38 @@ public class Register extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Register</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Register at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            String email = "";
+            String password = "";
+            String confirmPassword = "";
+            String firstName = "";
+            String lastName = "";
+            User user;
+
+            if (request.getParameter("btnSubmit") != null) {
+                if ("".equals(request.getParameter("txtFirstName"))) {
+                    out.println("<script>alert('Please enter an first name");
+                } else if ("".equals(request.getParameter("txtLastName"))) {
+                    out.println("<script>alert('Please enter a last name");
+                } else if ("".equals(request.getParameter("txtEmail"))) {
+                    out.println("<script>alert('Please enter an email");
+                } else if ("".equals(request.getParameter("txtPassword"))) {
+                    out.println("<script>alert('Please enter a password");
+                } else if ("".equals(request.getParameter("txtPasswordConfirm"))) {
+                    out.println("<script>alert('Please confirm password");
+                } else if (!(request.getParameter("txtPassword").equals(request.getParameter("txtPasswordConfirm")))) {
+                    out.println("<script>alert('Passwords do not match");
+                } else {
+                    email = request.getParameter("txtEmail");
+                    password = request.getParameter("txtPassword");
+                    firstName = request.getParameter("txtFirstName");
+                    lastName = request.getParameter("txtLastName");
+
+                    out.println("<script>alert('Registered Successfully')</script>");
+
+                    user = new User(firstName, lastName, email, password);
+                    response.sendRedirect("game.jsp");
+                }
+            }
         }
     }
 
@@ -83,5 +105,4 @@ public class Register extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

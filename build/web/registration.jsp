@@ -12,7 +12,7 @@
         <title>Alien Invasion - Registration</title>
     </head>
     <body>
-        <form id="frmRegistration" action="registration.jsp" method="post">
+        <form id="frmRegistration" action="Register" method="post">
             <label for="txtFirstName">First Name: </label>&nbsp;<input type="text" id="txtFirstName" name="txtFirstName" value="">
             <br />            
             <label for="txtLastName">Last Name: </label>&nbsp;<input type="text" id="txtLastName" name="txtLastName" value="">
