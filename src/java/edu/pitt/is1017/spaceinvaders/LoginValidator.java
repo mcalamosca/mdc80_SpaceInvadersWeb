@@ -35,6 +35,7 @@ public class LoginValidator extends HttpServlet {
             String userName = "";
             String password = "";
             User user;
+            
             if (request.getParameter("btnSubmit") != null) {
                 if (request.getParameter("txtUserName") != null) {
                     if (request.getParameter("txtUserName") != "") {
@@ -51,10 +52,13 @@ public class LoginValidator extends HttpServlet {
                 if (!userName.equals("") && !password.equals("")) {
                     user = new User(userName, password);
                     if(user.isLoggedIn()) {
-                        response.sendRedirect("game.jsp");
                         out.println("<script>alert('Successful Login')</script>");
+                        response.sendRedirect("game.jsp");
                     } else {
-                        out.println("<script>alert('Username and/or password is incorrect')</script>");
+                        request.setAttribute("loggedIn",false);
+                        //out.println("<script>alert('Username and/or password is incorrect')</script>");
+                        response.sendRedirect("index.jsp");
+
                     }
 
                 } else {

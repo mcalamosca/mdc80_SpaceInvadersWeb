@@ -11,18 +11,31 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Alien Invasion - Login</title>
+        <link rel="stylesheet" id="login"  href='assets/css/login.css'/>
+
     </head>
+    <script>
+        var loggedIn;
+        if (${loggedIn == 'false'}) {
+            alert('Username and/or password is incorrect');
+        }
+    </script>
     <%
-        
+
     %>
     <body>
-        <form id="frmLogin" action="LoginValidator" method="post">
-            <label for="txtUserName">Email: </label>&nbsp;<input type="text" id="txtUserName" name="txtUserName" value="">
-            <br />
-            <label for="txtPassword">Password: </label>&nbsp;<input type="password" id="txtPassword" name="txtPassword" value="">
-            <br />
-            <input type="submit" id="btnSubmit" name="btnSubmit" value="Login">
-            <a href="registration.jsp">Register</a>
-        </form>
+        <section class="loginform ai">
+            <form id="frmLogin" action="LoginValidator" method="post">
+                <ul>
+                    <li><label for="txtUserName">Email: </label>
+                        <input type="text" id="txtUserName" name="txtUserName" placeholder="yourname@email.com" required>&nbsp;</li>
+                    <li><label for="txtPassword">Password: </label>
+                        <input type="password" id="txtPassword" name="txtPassword" placeholder="password" required>&nbsp;</li>
+                    <li><input type="submit" id="btnSubmit" name="btnSubmit" value="Login">&nbsp;</li>
+                    <li><a href="registration.jsp"><input type="button" id="btnRegister" name="btnRegister" value="Register"></a></li>
+                </ul>
+
+            </form>
+        </section>
     </body>
 </html>
