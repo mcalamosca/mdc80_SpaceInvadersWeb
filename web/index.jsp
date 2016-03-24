@@ -52,8 +52,8 @@
     <body>
         <section class="loginform ai">
             <div>
-                <form id="frmLogin" action="index.jsp" method="post">
-                    <ul>
+                <form id="frmLogin" class="frmLogin" action="index.jsp" method="post">
+                    <ul class="loginform">
                         <li><label for="txtUserName">Email: </label>
                             <input type="text" id="txtUserName" name="txtUserName" placeholder="yourname@email.com" required>&nbsp;</li>
                         <li><label for="txtPassword">Password: </label>

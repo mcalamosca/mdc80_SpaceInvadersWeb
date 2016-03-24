@@ -16,7 +16,7 @@
     <body>
         <section class="registerform ai">
             <div>
-                <form id="frmRegistration" action="Register" method="post">
+                <form id="frmRegistration" class="frmRegistration" action="Register" method="post">
                     <ul>
                         <li><label for="txtFirstName">First Name: </label>&nbsp;<input type="text" id="txtFirstName" name="txtFirstName" value=""></li>
                         <li><label for="txtLastName">Last Name: </label>&nbsp;<input type="text" id="txtLastName" name="txtLastName" value=""></li>
