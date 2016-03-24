@@ -14,18 +14,42 @@
         <link rel="stylesheet" id="login"  href='assets/css/login.css'/>
 
     </head>
-    <script>
-        var loggedIn;
-        if (${loggedIn == 'false'}) {
-            alert('Username and/or password is incorrect');
-        }
-    </script>
     <%
+            String userName = "";
+            String password = "";
+            User user;
+            
+            if (request.getParameter("btnSubmit") != null) {
+                if (request.getParameter("txtUserName") != null) {
+                    if (request.getParameter("txtUserName") != "") {
+                        userName = request.getParameter("txtUserName");
+                    }
+                }
 
+                if (request.getParameter("txtPassword") != null) {
+                    if (request.getParameter("txtPassword") != "") {
+                        password = request.getParameter("txtPassword");
+                    }
+                }
+
+                if (!userName.equals("") && !password.equals("")) {
+                    user = new User(userName, password);
+                    if(user.isLoggedIn()) {
+                        out.println("<script>alert('Successful Login')</script>");
+                        response.sendRedirect("game.jsp");
+                    } else {
+                        out.println("<script>alert('Username and/or password is incorrect')</script>");
+                    }
+
+                } else {
+                    out.println("<script>alert('You must enter both User Name and Password')</script>");
+                }
+            }
+        
     %>
     <body>
         <section class="loginform ai">
-            <form id="frmLogin" action="LoginValidator" method="post">
+            <form id="frmLogin" action="index.jsp" method="post">
                 <ul>
                     <li><label for="txtUserName">Email: </label>
                         <input type="text" id="txtUserName" name="txtUserName" placeholder="yourname@email.com" required>&nbsp;</li>
