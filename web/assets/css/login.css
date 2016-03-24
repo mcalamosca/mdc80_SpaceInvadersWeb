@@ -53,6 +53,17 @@ label {
     border-radius: 3px;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
 }
+div {
+    width: 500px;
+    height: 100px;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+}
 
 /*
 Used this as a reference http://www.hongkiat.com/blog/html5-loginpage/
