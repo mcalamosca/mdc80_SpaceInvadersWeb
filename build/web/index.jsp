@@ -14,7 +14,7 @@
         <link rel="stylesheet" id="login"  href='assets/css/login.css'/>
 
     </head>
-    <%
+    <%/*
         //originally I was using this code in the LoginValidator file but it's not possible to have an out.println and redirect in the same statement
         //so I couldn't show the alert of invalid username/password 
         String userName = "";
@@ -47,12 +47,12 @@
                 out.println("<script>alert('You must enter both User Name and Password')</script>");
             }
         }
-
+*/
     %>
     <body>
         <section class="loginform ai">
             <div>
-                <form id="frmLogin" class="frmLogin" action="index.jsp" method="post">
+                <form id="frmLogin" class="frmLogin" action="LoginValidator" method="post">
                     <ul class="loginform">
                         <li><label for="txtUserName">Email: </label>
                             <input type="text" id="txtUserName" name="txtUserName" placeholder="yourname@email.com" required>&nbsp;</li>
