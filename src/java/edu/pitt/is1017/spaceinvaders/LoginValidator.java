@@ -53,10 +53,8 @@ public class LoginValidator extends HttpServlet {
                     user = new User(userName, password);
                     if(user.isLoggedIn()) {
                         out.println("<script>alert('Successful Login');top.window.location='game.jsp';</script>");
-                        //response.sendRedirect("game.jsp");
                     } else {
                         out.println("<script>alert('Username and/or password is incorrect');top.window.location='index.jsp';</script>");
-                        //response.sendRedirect("index.jsp");
                     }
 
                 } else {

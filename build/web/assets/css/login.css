@@ -72,13 +72,18 @@ div {
 form.frmLogin {
     background-color: aliceblue;
     padding: 10px;
-    width: 480px;
+    width: 520px;
     height: 80px;
     margin: 0 auto;
     margin-top: 0;
     border-style: outset;
     border-width: 5px;
     border-color: #ccccff;
+}
+li.title{
+    padding-left: 190px;
+    font-weight: bold;
+    font-size: 130%
 }
 
 /*
