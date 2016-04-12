@@ -17,13 +17,17 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-	}
+            }
+            div.score {
+                color: #fff;
+            }
         </style>
         <script src="assets/js/jquery-2.2.2.min.js"></script>
         <script src="assets/js/helpers.js"></script>
         
     </head>
     <body>
-        <script src="assets/js/gameScript.js" type="text/javascript"></script>
+        <script src="assets/js/gameJQuery.js" type="text/javascript"></script>
+            
     </body>
 </html>

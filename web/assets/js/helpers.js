@@ -9,8 +9,7 @@ function AABBIntersect(ax, ay, aw, ah, bx, by, bw, bh) {
 
 
 /**
- * Bullet class 
- * 
+ * Bullet class
  * @param {number} x     start x position
  * @param {number} y     start y position
  * @param {number} vely  velocity in y direction
