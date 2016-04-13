@@ -7,6 +7,7 @@ package edu.pitt.is1017.spaceinvaders;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +35,13 @@ public class LoginValidator extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String userName = "";
             String password = "";
-            User user;
-            
+            User user = null;
+
+            int userID;
+            String lastName;
+            String firstName;
+            String email;
+
             if (request.getParameter("btnSubmit") != null) {
                 if (request.getParameter("txtUserName") != null) {
                     if (request.getParameter("txtUserName") != "") {
@@ -51,8 +57,28 @@ public class LoginValidator extends HttpServlet {
 
                 if (!userName.equals("") && !password.equals("")) {
                     user = new User(userName, password);
-                    if(user.isLoggedIn()) {
-                        out.println("<script>alert('Successful Login');top.window.location='game.jsp';</script>");
+                                        
+                    userID = user.getUserID();
+                    lastName = user.getLastName();
+                    firstName = user.getFirstName();
+                    email = user.getEmail();
+                    
+                    
+                    userID = request.setParameter("userID", userID);
+                    lastName = (String) request.getAttribute("lastName");
+                    firstName = (String) request.getAttribute("firstName");
+                    email = (String) request.getAttribute("email");
+                    /**
+                     * userID = user.getUserID(); lastName = user.getLastName(); firstName = user.getFirstName(); email = user.getEmail();
+                     *
+                     * request.setAttribute("userID", userID); request.setAttribute("lastName", lastName); request.setAttribute("firstName", firstName); request.setAttribute("email", email);
+                     *
+                     * RequestDispatcher dispatcher = request.getRequestDispatcher("game2.jsp"); if (dispatcher != null) { dispatcher.forward(request, response);
+                    }*
+                     */
+
+                    if (user.isLoggedIn()) {
+                        out.println("<script>alert('Successful Login');top.window.location='game2.jsp';</script>");
                     } else {
                         out.println("<script>alert('Username and/or password is incorrect');top.window.location='index.jsp';</script>");
                     }
