@@ -4,24 +4,12 @@
 <html>
     <head>
         <%
-            int userID;
-            String lastName;
-            String firstName;
-            String email;
-                     
-            userID = (int) request.getAttribute("userID");
-            lastName = (String) request.getAttribute("lastName");
-            firstName = (String) request.getAttribute("firstName");
-            email = (String) request.getAttribute("email");
+            int userID = Integer.parseInt(session.getAttribute("userID").toString());
+            String lastName = (String) session.getAttribute("lastName");
+            String firstName = (String) session.getAttribute("firstName");
+            String email = (String) session.getAttribute("email");
+
             
-            JSONObject json = new JSONObject();
-            json.put("userID", userID);
-            json.put("lastName", lastName);
-            json.put("firstName", firstName);
-            json.put("email", email);
-            
-            out.print(json);
-            //out.flush();
         %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Alien Invasion</title>
@@ -48,7 +36,11 @@
 
     </head>
     <body>
-        <script src="assets/js/gameJQuery.js" type="text/javascript"></script>
-
+            <input type="hidden" id="firstName" name="firstName" value="<%=firstName%>"/>
+            <input type="hidden" id="lastName" name="firstName" value="<%=lastName%>"/>
+            <input type="hidden" id="userID" name="firstName" value="<%=userID%>"/>
+            <input type="hidden" id="email" name="firstName" value="<%=email%>"/>
+            
+        <script src="assets/js/gameJQuery.js" type="text/javascript"></script>        
     </body>
 </html>

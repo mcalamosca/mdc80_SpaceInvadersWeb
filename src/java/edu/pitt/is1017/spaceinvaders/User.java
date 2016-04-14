@@ -92,7 +92,7 @@ public class User {
 		sql += "(`lastName`,`firstName`,`email`,`password`) ";
 		sql += "VALUES (\""+lastName+"\",\"" + firstName + "\",\"" + email + "\",md5(\"" + password + "\"));";
 
-		
+		db.executeQuery(sql);
 		db.closeConnection();
 	}
 

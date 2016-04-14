@@ -34,7 +34,6 @@ public class Register extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String email = "";
             String password = "";
-            String confirmPassword = "";
             String firstName = "";
             String lastName = "";
             User user;
@@ -58,10 +57,11 @@ public class Register extends HttpServlet {
                     firstName = request.getParameter("txtFirstName");
                     lastName = request.getParameter("txtLastName");
 
+                    user = new User(lastName, firstName, email, password);
                     out.println("<script>alert('Registered Successfully')</script>");
 
-                    user = new User(firstName, lastName, email, password);
-                    response.sendRedirect("game.jsp");
+                    
+                    response.sendRedirect("index.jsp");
                 }
             }
         }

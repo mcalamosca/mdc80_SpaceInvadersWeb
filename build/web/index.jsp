@@ -19,7 +19,7 @@
     <body>
         <section class="loginform ai">
             <div>
-                <form id="frmLogin" class="frmLogin" action="LoginValidator" method="post">
+                <form id="frmLogin" class="frmLogin" action="LoginValidate" method="post">
                     <ul class="loginform">
                         <li class="title">Space Invaders</li><br/><br/>
                         <li><label for="txtUserName">Email: </label>
