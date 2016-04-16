@@ -9,38 +9,38 @@
             String firstName = (String) session.getAttribute("firstName");
             String email = (String) session.getAttribute("email");
 
-            
+
         %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Alien Invasion</title>
-        <style>
-            body{
-                background-color: #000;
-            }
-            canvas {
-                background-color: #000;
-                display: block;
-                position: absolute;
-                margin: auto;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
-            div.score {
-                color: #fff;
-            }
-        </style>
         <script src="assets/js/jquery-2.2.2.min.js"></script>
         <script src="assets/js/helpers.js"></script>
+        <script src="assets/js/starfield.js"></script>
+        <link href="assets/css/game.css" rel="stylesheet" type="text/css"/>
+
 
     </head>
     <body>
-            <input type="hidden" id="firstName" name="firstName" value="<%=firstName%>"/>
-            <input type="hidden" id="lastName" name="firstName" value="<%=lastName%>"/>
-            <input type="hidden" id="userID" name="firstName" value="<%=userID%>"/>
-            <input type="hidden" id="email" name="firstName" value="<%=email%>"/>
-            
-        <script src="assets/js/gameJQuery.js" type="text/javascript"></script>        
+        <div id="scoreboard">
+            <table id= "tblScore" class="score" cellpadding="3" border="2">
+                <thead>
+                <th>First Name</th>             
+                <th>Last Name</th> 
+                <th>Score</th>
+                </thead>
+                <tbody>                    
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="starfield" class="starfield"></div>
+        <input type="hidden" id="firstName" name="firstName" value="<%=firstName%>"/>
+        <input type="hidden" id="lastName" name="firstName" value="<%=lastName%>"/>
+        <input type="hidden" id="userID" name="firstName" value="<%=userID%>"/>
+        <input type="hidden" id="email" name="firstName" value="<%=email%>"/>
+
+        <script src="assets/js/scoreboard.js" type="text/javascript"></script>
+        <script src="assets/js/gameJQuery.js" type="text/javascript"></script> 
+        <script src="assets/js/runStarfield.js" type="text/javascript"></script>
     </body>
 </html>

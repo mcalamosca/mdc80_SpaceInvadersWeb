@@ -33,28 +33,31 @@ userID = $('#userID').val();
  */
 // start and run the game
 
-
 $(document).ready(function () {
-    // create game canvas and inputhandeler
-    display = new Screen(504, 600);
-    input = new InputHandeler();
+    main();
 
-    // create all sprites frame
-    var img = new Image();
-    img.addEventListener("load", function () {
-        alSprite = [
-            [new Sprite(this, 0, 0, 22, 16), new Sprite(this, 0, 16, 22, 16)],
-            [new Sprite(this, 22, 0, 16, 16), new Sprite(this, 22, 16, 16, 16)],
-            [new Sprite(this, 38, 0, 24, 16), new Sprite(this, 38, 16, 24, 16)]
-        ];
-        taSprite = new Sprite(this, 62, 0, 22, 16);
-        ciSprite = new Sprite(this, 84, 8, 36, 24);
-        // initate and run the game
-        init();
-        run();
-    });
-    img.src = "assets/images/invaders.png";
 
+    function main() {
+        // create game canvas and inputhandeler
+        display = new Screen(504, 600);
+        input = new InputHandeler();
+
+        // create all sprites frame
+        var img = new Image();
+        img.addEventListener("load", function () {
+            alSprite = [
+                [new Sprite(this, 0, 0, 22, 16), new Sprite(this, 0, 16, 22, 16)],
+                [new Sprite(this, 22, 0, 16, 16), new Sprite(this, 22, 16, 16, 16)],
+                [new Sprite(this, 38, 0, 24, 16), new Sprite(this, 38, 16, 24, 16)]
+            ];
+            taSprite = new Sprite(this, 62, 0, 22, 16);
+            ciSprite = new Sprite(this, 84, 8, 36, 24);
+            // initate and run the game
+            init();
+            run();
+        });
+        img.src = "assets/images/invaders.png";
+    }
     /**
      * Initate game objects
      */
@@ -62,7 +65,7 @@ $(document).ready(function () {
         // set start settings
         frames = 0;
         spFrame = 0;
-        lvFrame = 5;
+        lvFrame = 60;
         dir = 1;
         // create the tank object
         tank = {
@@ -158,19 +161,22 @@ $(document).ready(function () {
      */
     function run() {
         interval = setInterval(function () {
-            update();
-            render();
-            //window.requestAnimationFrame(loop, display.canvas);
+            //check if ship is hit by alien
+            if (checkState()) {
+                update();
+                render();
+            }
+            if (input.isPressed(13)) {
+                clearInterval(interval);
+                main();
+            }
         }, 15);
-        //window.requestAnimationFrame(loop, display.canvas);
     }
     ;
     /**
      * Update the game logic
      */
     function update() {
-        //check if ship is hit by alien
-        checkState();
         // update the frame count
         frames++;
         // update tank position depending on pressed keys
@@ -197,6 +203,7 @@ $(document).ready(function () {
                 bullets.splice(i, 1);
                 i--;
                 len--;
+                scoreTracker(0);
                 continue;
             }
             // check if bullet hits any city
@@ -222,8 +229,8 @@ $(document).ready(function () {
                     i--;
                     len--;
 
-                    score++;
-                    console.log(score);
+                    scoreTracker(1);
+                    //console.log(score);
                     // increase the movement frequence of the aliens
                     // when there are less of them
                     switch (len2) {
@@ -251,21 +258,21 @@ $(document).ready(function () {
                 }
             }
         }
-        /**
-         // makes the alien shoot in an random fashion 
-         if (Math.random() < 0.03 && aliens.length > 0) {
-         var a = aliens[Math.round(Math.random() * (aliens.length - 1))];
-         // iterate through aliens and check collision to make
-         // sure only shoot from front line
-         for (var i = 0, len = aliens.length; i < len; i++) {
-         var b = aliens[i];
-         if (AABBIntersect(a.x, a.y, a.w, 100, b.x, b.y, b.w, b.h)) {
-         a = b;
-         }
-         }
-         // create and append new bullet
-         bullets.push(new Bullet(a.x + a.w*0.5, a.y + a.h, 4, 2, 4, "#fff"));
-         }**/
+
+        // makes the alien shoot in an random fashion 
+        if (Math.random() < 0.03 && aliens.length > 0) {
+            var a = aliens[Math.round(Math.random() * (aliens.length - 1))];
+            // iterate through aliens and check collision to make
+            // sure only shoot from front line
+            for (var i = 0, len = aliens.length; i < len; i++) {
+                var b = aliens[i];
+                if (AABBIntersect(a.x, a.y, a.w, 100, b.x, b.y, b.w, b.h)) {
+                    a = b;
+                }
+            }
+            // create and append new bullet
+            bullets.push(new Bullet(a.x + a.w * 0.5, a.y + a.h, 4, 2, 4, "#fff"));
+        }
 
         // update the aliens at the current movement frequence
         if (frames % lvFrame === 0) {
@@ -295,23 +302,50 @@ $(document).ready(function () {
 //check the game state
     function checkState() {
         //check if ship is hit by alien
+
         for (var j = 0, len2 = aliens.length; j < len2; j++) {
             var a = aliens[j];
             if (AABBIntersect(tank.x, tank.y, 22, 16, a.x, a.y, a.w, a.h) || a.y > (display.canvas.height - 66)) {
-                clearInterval(interval);
                 endGame();
-                break;
+                return false;
             }
         }
+
+        if (aliens.length <= 0) {
+            endGame();
+            return false;
+        }
+        return true;
     }
 
     function endGame() {
-        display.end
-        alert("Game Over");
-    }
-    function scoreTracker() {
+        display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
+        //update score
+        display.ctx.font = "15px Arial";
+        display.ctx.fillStyle = "white";
+        display.ctx.fillText("Score: " + score, 5, 15);
+        display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
+        display.ctx.fillText("Game Over", display.canvas.width / 2 - 50, display.canvas.height / 2);
+        display.ctx.fillText("Score: " + score, display.canvas.width / 2 - 40, display.canvas.height / 2 + 20);
+
+        $(window).keypress(function (e) {
+            var key = e.which;
+            if (key === 13) {
+                clearInterval(interval);
+                main();
+            }
+        });
 
     }
+    function scoreTracker(sc) {
+        if (sc === 1) {
+            score += 2;
+        } else if (sc === 0 && score != 0) {
+            score--;
+        }
+    }
+
+
     /**
      * Render the game state to the canvas
      */

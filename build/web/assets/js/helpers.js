@@ -83,10 +83,7 @@ Screen.prototype.drawBullet = function (bullet) {
 };
 
 Screen.prototype.end = function () {
-    this.ctx.fillStyle = 'black';
-    this.ctx.fillRect(0, 0, this.width, this.height);
     this.ctx.font = "40pt Calibri,Geneva,Arial";
-    this.ctx.strokeStyle = "rgb(FF,0,0)";
     this.ctx.fillStyle = "rgb(0,20,180)";
     this.ctx.fillText("Game Over", this.width / 2 - 150, this.height / 2 - 10);
 };
