@@ -18,8 +18,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Master Chief
  */
-@WebServlet(name = "ws_savescore", urlPatterns = {"/ws_savescore"})
-public class ws_savescore extends HttpServlet {
+@WebServlet(name = "ws_startscore", urlPatterns = {"/ws_startscore"})
+public class ws_startscore extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,14 +38,17 @@ public class ws_savescore extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             score = request.getParameter("score");
-
+            gameID = request.getParameter("gameID");
+            userID = Integer.parseInt(request.getParameter("userID"));
+            out.println("Before st: "+score);
+            out.println(gameID);
+            out.println(userID);
+            
+            User user = new User(userID);
+            ScoreTracker st = new ScoreTracker(user, gameID);
+            
             HttpSession session = request.getSession(true);
-            ScoreTracker st = (ScoreTracker) session.getAttribute("scoreTracker");
-            st.recordScore(Integer.parseInt(score));
-            int highScore = st.getHighestScore();
-            out.println("Score: " + score);
-            out.println("High Score: " + highScore);
-
+            session.setAttribute("scoreTracker", st);
         }
     }
 

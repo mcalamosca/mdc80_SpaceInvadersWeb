@@ -2,6 +2,15 @@
  * Check if to axis aligned bounding boxes intersects
  *
  * @return {bool}  the check result
+ * @param {type} ax     alien x coord
+ * @param {type} ay     alien y coord
+ * @param {type} aw     alien width
+ * @param {type} ah     alien height
+ * @param {type} bx     bullet x coord
+ * @param {type} by     bullet y coord
+ * @param {type} bw     bullet width
+ * @param {type} bh     bullet height
+ * @returns {Boolean}
  */
 function AABBIntersect(ax, ay, aw, ah, bx, by, bw, bh) {
     return ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah;

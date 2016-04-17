@@ -13,7 +13,9 @@ var display,
         aliens,
         dir,
         tank,
+        lives,
         bullets,
+        alienBullets,
         cities,
         score = 0,
         firstName,
@@ -23,11 +25,11 @@ var display,
         interval,
         gameID;
 
+//initialize user values
 firstName = $('#firstName').val();
 lastName = $('#lastName').val();
 email = $('#email').val();
 userID = $('#userID').val();
-
 /**
  * Initiate and start the game
  */
@@ -35,13 +37,10 @@ userID = $('#userID').val();
 
 $(document).ready(function () {
     main();
-
-
     function main() {
         // create game canvas and inputhandeler
         display = new Screen(504, 600);
         input = new InputHandeler();
-
         // create all sprites frame
         var img = new Image();
         img.addEventListener("load", function () {
@@ -52,6 +51,8 @@ $(document).ready(function () {
             ];
             taSprite = new Sprite(this, 62, 0, 22, 16);
             ciSprite = new Sprite(this, 84, 8, 36, 24);
+            //assign ID to game 
+            gameID = generateUUID();
             // initate and run the game
             init();
             run();
@@ -62,6 +63,10 @@ $(document).ready(function () {
      * Initate game objects
      */
     function init() {
+        //Initialize score
+        initScore();
+        //Initialize Lives
+        lives = 5;
         // set start settings
         frames = 0;
         spFrame = 0;
@@ -75,6 +80,7 @@ $(document).ready(function () {
         };
         // initatie bullet array
         bullets = [];
+        alienBullets = [];
         // create the cities object (and canvas)
         cities = {
             canvas: null,
@@ -160,17 +166,14 @@ $(document).ready(function () {
      * the game
      */
     function run() {
-        interval = setInterval(function () {
-            //check if ship is hit by alien
+        var loop = function () {
             if (checkState()) {
                 update();
                 render();
+                window.requestAnimationFrame(loop, display.canvas);
             }
-            if (input.isPressed(13)) {
-                clearInterval(interval);
-                main();
-            }
-        }, 15);
+        };
+        window.requestAnimationFrame(loop, display.canvas);
     }
     ;
     /**
@@ -185,7 +188,6 @@ $(document).ready(function () {
         }
         if (input.isDown(39)) { // Right
             tank.x += 4;
-
         }
         // keep the tank sprite inside of the canvas
         tank.x = Math.max(Math.min(tank.x, display.width - (30 + taSprite.w)), 30);
@@ -206,6 +208,7 @@ $(document).ready(function () {
                 scoreTracker(0);
                 continue;
             }
+
             // check if bullet hits any city
             var h2 = b.height * 0.5; // half hight is used for
             // simplicity
@@ -228,7 +231,6 @@ $(document).ready(function () {
                     bullets.splice(i, 1);
                     i--;
                     len--;
-
                     scoreTracker(1);
                     //console.log(score);
                     // increase the movement frequence of the aliens
@@ -259,6 +261,7 @@ $(document).ready(function () {
             }
         }
 
+
         // makes the alien shoot in an random fashion 
         if (Math.random() < 0.03 && aliens.length > 0) {
             var a = aliens[Math.round(Math.random() * (aliens.length - 1))];
@@ -271,7 +274,7 @@ $(document).ready(function () {
                 }
             }
             // create and append new bullet
-            bullets.push(new Bullet(a.x + a.w * 0.5, a.y + a.h, 4, 2, 4, "#fff"));
+            alienBullets.push(new Bullet(a.x + a.w * 0.5, a.y + a.h, 4, 2, 4, "#fff"));
         }
 
         // update the aliens at the current movement frequence
@@ -297,6 +300,29 @@ $(document).ready(function () {
                 }
             }
         }
+        //Check for collisions with alien bullets and tank
+        for (var i = 0, len = alienBullets.length; i < len; i++) {
+            var b = alienBullets[i];
+            b.update();
+            // remove bullets outside of the canvas
+            if (b.y + b.height < 0 || b.y > display.height) {
+                alienBullets.splice(i, 1);
+                i--;
+                len--;
+                continue;
+            }
+            //check if any alien bullets hit tank
+            if (AABBIntersect(b.x, b.y, b.width, b.height, tank.x, tank.y, 22, 16)) {
+                console.log("TANK HIT");
+                lives--;
+                tank = {
+                    sprite: taSprite,
+                    x: (display.width - taSprite.w) / 2,
+                    y: display.height - (30 + taSprite.h)
+                };
+                continue;
+            }
+        }
     }
     ;
 //check the game state
@@ -310,8 +336,13 @@ $(document).ready(function () {
                 return false;
             }
         }
-
+        //if there are no aliens left, win game
         if (aliens.length <= 0) {
+            winGame();
+            return false;
+        }
+        //if you are out of lives, end game
+        if(lives === 0){
             endGame();
             return false;
         }
@@ -327,23 +358,76 @@ $(document).ready(function () {
         display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
         display.ctx.fillText("Game Over", display.canvas.width / 2 - 50, display.canvas.height / 2);
         display.ctx.fillText("Score: " + score, display.canvas.width / 2 - 40, display.canvas.height / 2 + 20);
-
-        $(window).keypress(function (e) {
+        display.ctx.fillText("To restart, press Enter", display.canvas.width / 2 - 80, display.canvas.height / 2 + 85);
+        $(document).keypress(function (e) {
             var key = e.which;
             if (key === 13) {
                 clearInterval(interval);
+                display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
                 main();
             }
         });
-
+    }
+    
+    function winGame() {
+        display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
+        //update score
+        display.ctx.font = "15px Arial";
+        display.ctx.fillStyle = "white";
+        display.ctx.fillText("Score: " + score, 5, 15);
+        display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
+        display.ctx.fillText("YOU WON!", display.canvas.width / 2 - 50, display.canvas.height / 2);
+        display.ctx.fillText("Score: " + score, display.canvas.width / 2 - 40, display.canvas.height / 2 + 20);
+        display.ctx.fillText("To restart, press Enter", display.canvas.width / 2 - 80, display.canvas.height / 2 + 85);
+        $(document).keypress(function (e) {
+            var key = e.which;
+            if (key === 13) {
+                clearInterval(interval);
+                display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
+                main();
+            }
+        });
+    }
+    function initScore() {
+        $.post('ws_startscore', {gameID: gameID, userID: userID, score: score},
+                function (returnedData) {
+                    console.log(returnedData);
+                });
     }
     function scoreTracker(sc) {
         if (sc === 1) {
-            score += 2;
-        } else if (sc === 0 && score != 0) {
+            score++;
+            $.post('ws_savescore', {score: score},
+                    function (returnedData) {
+                        console.log(returnedData);
+                    });
+        } else if (sc === 0 && score !== 0) {
             score--;
+            $.post('ws_savescore', {score: score},
+                    function (returnedData) {
+                        console.log(returnedData);
+                    });
         }
+
     }
+
+    /*
+     * Javascript UUID generator
+     * http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     */
+    function generateUUID() {
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now(); //use high-precision timer if available
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+
 
 
     /**
@@ -362,6 +446,9 @@ $(document).ready(function () {
         for (var i = 0, len = bullets.length; i < len; i++) {
             display.drawBullet(bullets[i]);
         }
+        for (var i = 0, len = alienBullets.length; i < len; i++) {
+            display.drawBullet(alienBullets[i]);
+        }
         display.ctx.restore();
         // draw the city graphics to the canvas
         display.ctx.drawImage(cities.canvas, 0, cities.y);
@@ -371,6 +458,7 @@ $(document).ready(function () {
         display.ctx.font = "15px Arial";
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
+        display.ctx.fillText("Lives: " + lives, 75, 15);
         display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
     }
 });

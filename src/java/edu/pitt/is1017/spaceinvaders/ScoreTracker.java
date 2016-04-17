@@ -14,10 +14,10 @@ public class ScoreTracker {
 	private String gameID,firstNameOther,lastNameOther;
 	;
 
-	public ScoreTracker(User user){
+	public ScoreTracker(User user, String gameID){
 		this.user=user;
 		this.currentScore=0;
-		this.gameID = UUID.randomUUID().toString();
+		this.gameID = gameID;
 
 		DbUtilities db = new DbUtilities();
 
@@ -44,15 +44,10 @@ public class ScoreTracker {
 		db.closeConnection();
 	}
 
-	public void recordScore(int point){
+	public void recordScore(int points){
 		DbUtilities db = new DbUtilities();		
 
-		if(point == 1){
-			currentScore++;
-		}
-		else if(point == -1){
-			currentScore--;
-		}
+		currentScore = points;
 
 		//updates the score for the current game 
 		String updateScore = "UPDATE alieninvasion.runningscores SET `scoreValue`="+ getCurrentScore() +" ";

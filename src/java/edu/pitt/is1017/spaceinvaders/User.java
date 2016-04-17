@@ -4,156 +4,154 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 
+ *
  * @author Micah Calamosca
  *
  */
 public class User {
-	private int userID;
-	private String lastName;
-	private String firstName;
-	private String email;
-	private String password;
-	private boolean loggedIn = false;
 
-	public User(int userID){
-		DbUtilities db = new DbUtilities();
+    private int userID;
+    private String lastName;
+    private String firstName;
+    private String email;
+    private String password;
+    private boolean loggedIn = false;
 
-		String sql = "SELECT * FROM `alieninvasion`.`users` WHERE `userID` = \"" + userID + "\"";
+    public User(int userID) {
+        DbUtilities db = new DbUtilities();
 
-		ResultSet rs = db.getResultSet(sql);
+        String sql = "SELECT * FROM `alieninvasion`.`users` WHERE `userID` = " + userID + ";";
 
-		try {
-			if(rs.next()){
-				try {
-					this.userID = rs.getInt(userID);
-					this.lastName = rs.getString("lastName");
-					this.firstName = rs.getString("firstName");
-					this.email = rs.getString("email");
-					this.password = rs.getString("password");
-					this.loggedIn = true;
-					
-					/*
+        ResultSet rs = db.getResultSet(sql);
+
+        try {
+            if (rs.next()) {
+                try {
+                    this.userID = userID;
+                    this.lastName = rs.getString("lastName");
+                    this.firstName = rs.getString("firstName");
+                    this.email = rs.getString("email");
+                    this.password = rs.getString("password");
+                    this.loggedIn = true;
+
+                    /*
 					System.out.println(this.userID);
 					System.out.println(this.lastName);
 					System.out.println(this.firstName);
 					System.out.println(this.email);
 					System.out.println(this.password);
-					*/
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		db.closeConnection();
-	}
+                     */
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        db.closeConnection();
+    }
 
-	public User(String email, String password){
-		DbUtilities db = new DbUtilities();
+    public User(String email, String password) {
+        DbUtilities db = new DbUtilities();
 
-		String sql = "SELECT * ";
-		sql += "FROM `alieninvasion`.`users` WHERE `email` = \"" + email + "\" ";
-		sql += "and `password` = md5(\"" + password + "\")";
+        String sql = "SELECT * ";
+        sql += "FROM `alieninvasion`.`users` WHERE `email` = \"" + email + "\" ";
+        sql += "and `password` = md5(\"" + password + "\")";
 
-		ResultSet rs = db.getResultSet(sql);
+        ResultSet rs = db.getResultSet(sql);
 
-		//needs to set appropriate values from result set
-		try {
-			if(rs.next()){
-				this.userID = rs.getInt("userID");
-				this.lastName = rs.getString("lastName");
-				this.firstName = rs.getString("firstName");
-				this.email = rs.getString("email");
-				this.password = rs.getString("password");
-				this.loggedIn = true;
-								
-			}
-		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //needs to set appropriate values from result set
+        try {
+            if (rs.next()) {
+                this.userID = rs.getInt("userID");
+                this.lastName = rs.getString("lastName");
+                this.firstName = rs.getString("firstName");
+                this.email = rs.getString("email");
+                this.password = rs.getString("password");
+                this.loggedIn = true;
 
-		db.closeConnection();
-	}
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-	public User(String lastName, String firstName, String email, String password){
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.email = email;
-		this.password = password;
+        db.closeConnection();
+    }
 
-		DbUtilities db = new DbUtilities();
+    public User(String lastName, String firstName, String email, String password) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.email = email;
+        this.password = password;
 
-		String sql = "INSERT INTO `alieninvasion`.`users`";
-		sql += "(`lastName`,`firstName`,`email`,`password`) ";
-		sql += "VALUES (\""+lastName+"\",\"" + firstName + "\",\"" + email + "\",md5(\"" + password + "\"));";
+        DbUtilities db = new DbUtilities();
 
-		db.executeQuery(sql);
-		db.closeConnection();
-	}
+        String sql = "INSERT INTO `alieninvasion`.`users`";
+        sql += "(`lastName`,`firstName`,`email`,`password`) ";
+        sql += "VALUES (\"" + lastName + "\",\"" + firstName + "\",\"" + email + "\",md5(\"" + password + "\"));";
 
-	public void saveUserInfo(){
-		DbUtilities db = new DbUtilities();
+        db.executeQuery(sql);
+        db.closeConnection();
+    }
 
-		String sql = "UPDATE users ";
-		
-		sql += "SET `lastName` = \"" + getLastName() + "\", ";
-		sql += "SET `firstName` = \"" + getFirstName() + "\", ";
-		sql += "SET `email` = \"" + getEmail() + "\", ";
-		sql += "SET `password` = \"" + getPassword() + "\", ";
-		sql += "WHERE `userID` = \"" + getUserID() + "\";";
+    public void saveUserInfo() {
+        DbUtilities db = new DbUtilities();
 
-		
-		db.closeConnection();
-	}
+        String sql = "UPDATE users ";
 
-	public String getLastName() {
-		return lastName;
-	}
+        sql += "SET `lastName` = \"" + getLastName() + "\", ";
+        sql += "SET `firstName` = \"" + getFirstName() + "\", ";
+        sql += "SET `email` = \"" + getEmail() + "\", ";
+        sql += "SET `password` = \"" + getPassword() + "\", ";
+        sql += "WHERE `userID` = \"" + getUserID() + "\";";
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+        db.closeConnection();
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setLoggedIn(boolean loggedIn) {
-		this.loggedIn = loggedIn;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public int getUserID() {
-		return userID;
-	}
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
 
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
 
 }
