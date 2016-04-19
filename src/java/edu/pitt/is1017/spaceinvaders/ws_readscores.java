@@ -7,11 +7,13 @@ package edu.pitt.is1017.spaceinvaders;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -28,20 +30,31 @@ public class ws_readscores extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private String score;
+    private String gameID;
+    private int userID;
+    private String highScore;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ws_readscores</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ws_readscores at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            HttpSession session = request.getSession(true);
+            score = (String) session.getAttribute("score");
+            gameID = (String) session.getAttribute("gameID");
+            userID = Integer.parseInt((String)session.getAttribute("userID"));
+
+            User user = new User(userID);
+            ScoreTracker st = new ScoreTracker(user, gameID);
+            st = (ScoreTracker) session.getAttribute("scoreTracker");
+
+            st.recordFinalScore();
+
+            highScoreOther = String.valueOf(st.getHighestScoreOther());
+            out.println("Highest Score: " + highScore);
+
+            //HttpSession session = request.getSession(true);
+            //session.setAttribute("highScore", highScore);
         }
     }
 

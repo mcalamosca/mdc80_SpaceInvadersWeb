@@ -30,8 +30,6 @@ public class ws_savescore extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private String score;
-    private String gameID;
-    private int userID;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

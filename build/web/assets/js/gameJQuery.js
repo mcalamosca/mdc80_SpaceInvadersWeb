@@ -66,7 +66,7 @@ $(document).ready(function () {
         //Initialize score
         initScore();
         //Initialize Lives
-        lives = 5;
+        lives = 500;
         // set start settings
         frames = 0;
         spFrame = 0;
@@ -342,7 +342,7 @@ $(document).ready(function () {
             return false;
         }
         //if you are out of lives, end game
-        if(lives === 0){
+        if (lives === 0) {
             endGame();
             return false;
         }
@@ -362,16 +362,16 @@ $(document).ready(function () {
         $(document).keypress(function (e) {
             var key = e.which;
             if (key === 13) {
-                clearInterval(interval);
                 display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
                 main();
             }
         });
     }
-    
+
     function winGame() {
         display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
         //update score
+        highScores();
         display.ctx.font = "15px Arial";
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
@@ -382,33 +382,41 @@ $(document).ready(function () {
         $(document).keypress(function (e) {
             var key = e.which;
             if (key === 13) {
-                clearInterval(interval);
                 display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
                 main();
             }
         });
+        
     }
+    //initialize score on table at 0
     function initScore() {
         $.post('ws_startscore', {gameID: gameID, userID: userID, score: score},
                 function (returnedData) {
                     console.log(returnedData);
                 });
     }
+    //update current game's score on table
     function scoreTracker(sc) {
         if (sc === 1) {
             score++;
             $.post('ws_savescore', {score: score},
                     function (returnedData) {
-                        console.log(returnedData);
+                        //console.log(returnedData);
                     });
         } else if (sc === 0 && score !== 0) {
             score--;
             $.post('ws_savescore', {score: score},
                     function (returnedData) {
-                        console.log(returnedData);
+                        //console.log(returnedData);
                     });
         }
 
+    }
+    //get highscores and save them to variables
+    function highScores() {
+        $.get('ws_readscores', function (data) {
+            console.log(data);
+        });
     }
 
     /*
@@ -458,8 +466,9 @@ $(document).ready(function () {
         display.ctx.font = "15px Arial";
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
-        display.ctx.fillText("Lives: " + lives, 75, 15);
         display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
+        display.ctx.font = "19px Arial";
+        display.ctx.fillText("Lives: " + lives, 5, display.canvas.height - 50);
     }
 });
 
