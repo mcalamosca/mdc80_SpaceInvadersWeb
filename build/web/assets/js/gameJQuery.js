@@ -23,8 +23,19 @@ var display,
         email,
         userID,
         interval,
-        gameID;
-
+        gameID,
+        myHighScore,
+        hsFirstName,
+        hsLastName,
+        hsScore;
+//lengths of scores for formatting
+var lngMyHighScore,
+        lngHsFirstName,
+        lngHsLastName,
+        lngHsScore;
+//canvas dimensions
+var canvasHeight,
+        canvasWidth;
 //initialize user values
 firstName = $('#firstName').val();
 lastName = $('#lastName').val();
@@ -40,6 +51,9 @@ $(document).ready(function () {
     function main() {
         // create game canvas and inputhandeler
         display = new Screen(504, 600);
+        //set height and width dimensions to variables to find middle of screen for printing
+        canvasHeight = display.canvas.height / 2;
+        canvasWidth = display.canvas.width / 2;
         input = new InputHandeler();
         // create all sprites frame
         var img = new Image();
@@ -66,7 +80,7 @@ $(document).ready(function () {
         //Initialize score
         initScore();
         //Initialize Lives
-        lives = 500;
+        lives = 50;
         // set start settings
         frames = 0;
         spFrame = 0;
@@ -322,6 +336,17 @@ $(document).ready(function () {
                 };
                 continue;
             }
+            // check if bullet hits any city
+            var h2 = b.height * 0.5; // half hight is used for
+            // simplicity
+            if (cities.y < b.y + h2 && b.y + h2 < cities.y + cities.h) {
+                if (cities.hits(b.x, b.y + h2)) {
+                    alienBullets.splice(i, 1);
+                    i--;
+                    len--;
+                    continue;
+                }
+            }
         }
     }
     ;
@@ -355,15 +380,21 @@ $(document).ready(function () {
         display.ctx.font = "15px Arial";
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
-        display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
-        display.ctx.fillText("Game Over", display.canvas.width / 2 - 50, display.canvas.height / 2);
-        display.ctx.fillText("Score: " + score, display.canvas.width / 2 - 40, display.canvas.height / 2 + 20);
-        display.ctx.fillText("To restart, press Enter", display.canvas.width / 2 - 80, display.canvas.height / 2 + 85);
+        display.ctx.fillText(lastName + ", " + firstName, canvasWidth * 2 - (lastName.length + firstName.length + 125), 15);
+        display.ctx.font = "20px Arial";
+        display.ctx.fillText("Game Over", canvasWidth - 67, canvasHeight - 50);
+        display.ctx.font = "15px Arial";
+        display.ctx.fillText("Score: " + score, canvasWidth - 40, canvasHeight + 35);
+        display.ctx.fillText("To restart, press Enter", canvasWidth - 85, canvasHeight + 85);
+        display.ctx.fillText("Your High Score: " + myHighScore, canvasWidth - (lngMyHighScore + 85), canvasHeight + 125);
+        display.ctx.fillText("TOP High Score: " + hsScore + " (" + hsFirstName + " " + hsLastName + ")",
+                canvasWidth - (lngMyHighScore + lngHsFirstName + lngHsLastName + 130), canvasHeight + 155);
+
         $(document).keypress(function (e) {
             var key = e.which;
             if (key === 13) {
                 display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
-                main();
+                window.location.reload();
             }
         });
     }
@@ -371,22 +402,28 @@ $(document).ready(function () {
     function winGame() {
         display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
         //update score
-        highScores();
+        saveFinalScore();
+
         display.ctx.font = "15px Arial";
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
-        display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
-        display.ctx.fillText("YOU WON!", display.canvas.width / 2 - 50, display.canvas.height / 2);
-        display.ctx.fillText("Score: " + score, display.canvas.width / 2 - 40, display.canvas.height / 2 + 20);
-        display.ctx.fillText("To restart, press Enter", display.canvas.width / 2 - 80, display.canvas.height / 2 + 85);
+        display.ctx.fillText(lastName + ", " + firstName, canvasWidth * 2 - (lastName.length + firstName.length + 125), 15);
+        display.ctx.font = "20px Arial";
+        display.ctx.fillText("YOU WON!", canvasWidth - 67, canvasHeight - 50);
+        display.ctx.font = "15px Arial";        
+        display.ctx.fillText("Score: " + score, canvasWidth - 40, canvasHeight + 35);
+        display.ctx.fillText("To restart, press Enter", canvasWidth - 85, canvasHeight + 85);
+        display.ctx.fillText("Your High Score: " + myHighScore, canvasWidth - (lngMyHighScore + 85), canvasHeight + 125);
+        display.ctx.fillText("TOP High Score: " + hsScore + " (" + hsFirstName + " " + hsLastName + ")",
+                canvasWidth - (lngMyHighScore + lngHsFirstName + lngHsLastName + 130), canvasHeight + 155);
+
         $(document).keypress(function (e) {
             var key = e.which;
             if (key === 13) {
                 display.ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
-                main();
+                window.location.reload();
             }
         });
-        
     }
     //initialize score on table at 0
     function initScore() {
@@ -394,29 +431,50 @@ $(document).ready(function () {
                 function (returnedData) {
                     console.log(returnedData);
                 });
+        highScores();
     }
     //update current game's score on table
     function scoreTracker(sc) {
         if (sc === 1) {
             score++;
-            $.post('ws_savescore', {score: score},
+            $.post('ws_savescore', {score: score, won: "false"},
                     function (returnedData) {
                         //console.log(returnedData);
                     });
         } else if (sc === 0 && score !== 0) {
             score--;
-            $.post('ws_savescore', {score: score},
+            $.post('ws_savescore', {score: score, won: "false"},
                     function (returnedData) {
                         //console.log(returnedData);
                     });
         }
 
     }
+    function saveFinalScore() {
+        $.post('ws_savescore', {score: score, won: "true"},
+                function (returnedData) {
+                    console.log(returnedData);
+                });
+    }
     //get highscores and save them to variables
     function highScores() {
-        $.get('ws_readscores', function (data) {
-            console.log(data);
+        $.getJSON('ws_readscores', function (data) {
+            hsFirstName = data.FirstName;
+            hsLastName = data.LastName;
+            hsScore = data.Score;
+            myHighScore = data.MyScore;
+
+            if (typeof myHighScore.length === 'undefined') {
+                lngMyHighScore = 0;
+            } else {
+                lngMyHighScore = myHighScore.length;
+            }
+            lngHsFirstName = hsFirstName.length;
+            lngHsLastName = hsLastName.length;
+            lngHsScore = hsScore.length;
+            console.log(lngMyHighScore);
         });
+
     }
 
     /*
@@ -467,8 +525,8 @@ $(document).ready(function () {
         display.ctx.fillStyle = "white";
         display.ctx.fillText("Score: " + score, 5, 15);
         display.ctx.fillText(lastName + ", " + firstName, display.canvas.width - (lastName.length + firstName.length + 125), 15);
-        display.ctx.font = "19px Arial";
-        display.ctx.fillText("Lives: " + lives, 5, display.canvas.height - 50);
+        display.ctx.font = "15px Arial";
+        display.ctx.fillText("Lives: " + lives, 5, display.canvas.height - 150);
     }
 });
 

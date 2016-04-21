@@ -7,13 +7,16 @@ package edu.pitt.is1017.spaceinvaders;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.json.JsonObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -30,29 +33,27 @@ public class ws_readscores extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private String score;
-    private String gameID;
-    private int userID;
-    private String highScore;
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession(true);
-            score = (String) session.getAttribute("score");
-            gameID = (String) session.getAttribute("gameID");
-            userID = Integer.parseInt((String)session.getAttribute("userID"));
+            ScoreTracker st = (ScoreTracker) session.getAttribute("scoreTracker");
 
-            User user = new User(userID);
-            ScoreTracker st = new ScoreTracker(user, gameID);
-            st = (ScoreTracker) session.getAttribute("scoreTracker");
+            st.getGlobalHighScore();
+            JSONObject json = new JSONObject();
+            try {
+                json.put("FirstName", st.getFirstNameOther());
+                json.put("LastName", st.getLastNameOther());
+                json.put("Score", st.getHighestScoreOther());
+                json.put("MyScore", st.getHighestScore());
+            } catch (JSONException ex) {
+                Logger.getLogger(ws_readscores.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-            st.recordFinalScore();
-
-            highScoreOther = String.valueOf(st.getHighestScoreOther());
-            out.println("Highest Score: " + highScore);
-
+            out.print(json);
             //HttpSession session = request.getSession(true);
             //session.setAttribute("highScore", highScore);
         }

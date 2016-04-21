@@ -30,16 +30,23 @@ public class ws_savescore extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private String score;
+    private boolean won;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             score = request.getParameter("score");
+            won = Boolean.parseBoolean(request.getParameter("won")); 
+
 
             HttpSession session = request.getSession(true);
             ScoreTracker st = (ScoreTracker) session.getAttribute("scoreTracker");
             st.recordScore(Integer.parseInt(score));
+            if (won) {
+                out.println("WON");
+                st.recordFinalScore();
+            }
             int highScore = st.getHighestScore();
             out.println("Score: " + score);
             out.println("High Score: " + highScore);
