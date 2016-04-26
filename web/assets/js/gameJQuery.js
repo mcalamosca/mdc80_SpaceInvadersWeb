@@ -2,6 +2,11 @@
  * Game objects
  */
 
+//started with game code located here: https://github.com/maxwihlborg/youtube-tutorials/tree/master/space-invaders
+//Added score tracking, seperate bullets for aliens, tracking collisions with alien bullets and tank object
+//Added score post and get methods for communicating with database
+//Added display of scores and user name during game
+//Added lives with methods to subtract lives when tank is hit
 var display,
         input,
         frames,
@@ -80,7 +85,7 @@ $(document).ready(function () {
         //Initialize score
         initScore();
         //Initialize Lives
-        lives = 50;
+        lives = 5;
         // set start settings
         frames = 0;
         spFrame = 0;
