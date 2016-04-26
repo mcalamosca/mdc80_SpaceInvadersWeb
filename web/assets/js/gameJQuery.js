@@ -410,7 +410,7 @@ $(document).ready(function () {
         display.ctx.fillText(lastName + ", " + firstName, canvasWidth * 2 - (lastName.length + firstName.length + 125), 15);
         display.ctx.font = "20px Arial";
         display.ctx.fillText("YOU WON!", canvasWidth - 67, canvasHeight - 50);
-        display.ctx.font = "15px Arial";        
+        display.ctx.font = "15px Arial";
         display.ctx.fillText("Score: " + score, canvasWidth - 40, canvasHeight + 35);
         display.ctx.fillText("To restart, press Enter", canvasWidth - 85, canvasHeight + 85);
         display.ctx.fillText("Your High Score: " + myHighScore, canvasWidth - (lngMyHighScore + 85), canvasHeight + 125);
@@ -431,8 +431,8 @@ $(document).ready(function () {
                 function (returnedData) {
                     console.log(returnedData);
                 });
-        highScores();
     }
+
     //update current game's score on table
     function scoreTracker(sc) {
         if (sc === 1) {
@@ -441,6 +441,7 @@ $(document).ready(function () {
                     function (returnedData) {
                         //console.log(returnedData);
                     });
+                    highScores();
         } else if (sc === 0 && score !== 0) {
             score--;
             $.post('ws_savescore', {score: score, won: "false"},
@@ -472,7 +473,6 @@ $(document).ready(function () {
             lngHsFirstName = hsFirstName.length;
             lngHsLastName = hsLastName.length;
             lngHsScore = hsScore.length;
-            console.log(lngMyHighScore);
         });
 
     }

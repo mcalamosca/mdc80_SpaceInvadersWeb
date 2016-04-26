@@ -40,9 +40,8 @@ public class ws_startscore extends HttpServlet {
             score = request.getParameter("score");
             gameID = request.getParameter("gameID");
             userID = Integer.parseInt(request.getParameter("userID"));
-            out.println("Before st: "+score);
-            out.println(gameID);
-            out.println(userID);
+            out.println("Game ID: " + gameID);
+            out.println("User ID in DB: " + userID);
             
             User user = new User(userID);
             ScoreTracker st = new ScoreTracker(user, gameID);
